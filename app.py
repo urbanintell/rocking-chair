@@ -28,6 +28,15 @@ with st.sidebar:
   """)
     st.markdown(html_temp.format("rgba(55, 53, 47, 0.16)"),unsafe_allow_html=True)
     st.markdown("""
+    # Example Prompts
+    "My 78 year old mother has to undergo chemo, starting next week. 
+    She seems to expect one of us to be there with her for every treatment and help care for her afterwards. 
+    She lives with my 82 year old father who is capable of driving her to the appointments and shopping for them.
+    Do you accompany your elderly parents to chemo? Did you hire in home help for them? How do you keep from resenting them for the care they need?"
+
+    """)
+    st.markdown(html_temp.format("rgba(55, 53, 47, 0.16)"),unsafe_allow_html=True)
+    st.markdown("""
     # How does it work
     Using advanced scraping and analytics tools, we've combed through countless online forums, social media platforms, and other resources to identify the most pressing issues and concerns that individuals face when caring for aging parents. We've analyzed this data to develop a comprehensive database of insights, tips, and recommendations that can help you provide the best possible care for your loved ones.
     """)
