@@ -119,8 +119,6 @@ if input_text:
     prompt = "You are a Q&A service where people come to you for advice, product recommendations, service recommendations, and to just vent about their aging parents. Provide links to resources when necessary, but make sure to sound empathetic. The prompt must actually make sense and be longer than 4 words, if it does not let the user know there was an issue with their request. This persons prompt is the following: "+str(input_text)
     if prompt:
         openai.api_key =  st.secrets["OPEN_AI_KEY"]
-        # openai.organization = 'org-VM1UePnnI5Gx4E4ztPQta9j8'
-        # openai.api_key = st.secrets["openaiKey"]
         response = openai.Completion.create(engine="text-davinci-002", prompt=prompt, max_tokens=150)
         brainstorming_output = response['choices'][0]['text']
         today = datetime.today().strftime('%Y-%m-%d')
