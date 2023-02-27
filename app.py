@@ -53,7 +53,7 @@ else:
     # input_text = st.text_input("Brainstorm ideas for", disabled=True)
     st.info("Thank you! Refresh for more brainstorming💡")
     st.markdown('''
-    <a target="_blank" style="color: black" href="https://twitter.com/intent/tweet?text=I%20just%20used%20the%20Rocking%20Chair%20helper%20tool%20by%20@boutique_lou!%0A%0Ahttps://brainstorming-buddy.streamlit.app/
+    <a target="_blank" style="color: black" href="https://twitter.com/intent/tweet?text=I%20just%20used%20the%20Rocking%20Chair%20helper%20tool%20by%20@boutique_lue!%0A%0Ahttps://urbanintell-rocking-chair-app-m5l2qq.streamlit.app/
     ">
         <button class="btn">
             Tweet about this!
