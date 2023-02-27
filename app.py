@@ -4,8 +4,6 @@ from datetime import datetime
 from streamlit.components.v1 import html
 import pandas as pd
 import csv
-import streamlit as st
-import streamlit_analytics
 
 st.set_page_config(page_title="Rocking Chair")
 
