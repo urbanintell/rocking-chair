@@ -130,6 +130,8 @@ if input_text:
         openai.api_key =  st.secrets["OPEN_AI_KEY"]
         response = openai.Completion.create(engine="text-davinci-002", prompt=prompt, max_tokens=150)
         brainstorming_output = response['choices'][0]['text']
+        today = datetime.today().strftime('%Y-%m-%d')
+        topic = "Brainstorming ideas for: "+input_text+"\n@Date: "+str(today)+"\n"+brainstorming_output
         
         st.info(brainstorming_output)
        
