@@ -130,16 +130,11 @@ if input_text:
         openai.api_key =  st.secrets["OPEN_AI_KEY"]
         response = openai.Completion.create(engine="text-davinci-002", prompt=prompt, max_tokens=150)
         brainstorming_output = response['choices'][0]['text']
-        today = datetime.today().strftime('%Y-%m-%d')
-        topic = "Brainstorming ideas for: "+input_text+"\n@Date: "+str(today)+"\n"+brainstorming_output
         
         st.info(brainstorming_output)
-        filename = "brainstorming_"+str(today)+".txt"
-        btn = st.download_button(
-            label="Download txt",
-            data=topic,
-            file_name=filename
-        )
+       
+        st.write("[Try Premium](https://2lemvxpy32s.typeform.com/to/PSNhqoo1)")
+
         fields = [input_text, brainstorming_output, str(today)]
         # read local csv file
         r = pd.read_csv('./data/prompts.csv')
