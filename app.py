@@ -4,12 +4,16 @@ from datetime import datetime
 from streamlit.components.v1 import html
 import pandas as pd
 import csv
+import pinecone
 
 st.set_page_config(page_title="Rocking Chair")
 
+pinecone.init(api_key='ad0771fd-9da6-4665-89de-feb647b17770', environment='us-east1-gcp')
+index = pinecone.Index('agingparents') 
+
 
 html_temp = """
-                <div style="background-color:{};padding:1px">
+                <div style="background-color:rgba(255, 255, 255, 0.16);padding:1px">
                 
                 </div>
                 """
@@ -42,7 +46,7 @@ with st.sidebar:
     """)
     st.markdown(html_temp.format("rgba(55, 53, 47, 0.16)"),unsafe_allow_html=True)
     st.markdown("""
-    Made by [Lusenii Kromah](linkedin.com/in/luseniikromah/)
+    Made with ❤️ by [Lusenii Kromah](linkedin.com/in/luseniikromah/)
     """,
     unsafe_allow_html=True,
     )
@@ -58,58 +62,7 @@ if st.session_state['output'] <=2:
     """)
     input_text = st.text_input("Community driven support for aging parent care needs - where compassion meets expertise. ", disabled=False, placeholder="What's on your mind? (Health, Finance, Wills, Venting, etc..)")
     st.session_state['output'] = st.session_state['output'] + 1
-else:
-    # input_text = st.text_input("Brainstorm ideas for", disabled=True)
-    st.info("Thank you! Refresh for more brainstorming💡")
-    st.markdown('''
-    <a target="_blank" style="color: black" href="https://twitter.com/intent/tweet?text=I%20just%20used%20the%20Rocking%20Chair%20helper%20tool%20by%20@boutique_lue!%0A%0Ahttps://urbanintell-rocking-chair-app-m5l2qq.streamlit.app/
-    ">
-        <button class="btn">
-            Tweet about this!
-        </button>
-    </a>
-    <style>
-    .btn{
-        display: inline-flex;
-        -moz-box-align: center;
-        align-items: center;
-        -moz-box-pack: center;
-        justify-content: center;
-        font-weight: 400;
-        padding: 0.25rem 0.75rem;
-        border-radius: 0.25rem;
-        margin: 0px;
-        line-height: 1.6;
-        color: #fff;
-        background-color: #00acee;
-        width: auto;
-        user-select: none;
-        border: 1px solid #00acee;
-        }
-    .btn:hover{
-        color: #00acee;
-        background-color: #fff;
-    }
-    </style>
-    ''',
-    unsafe_allow_html=True
-    )
 
-hide="""
-<style>
-footer{
-	visibility: hidden;
-    position: relative;
-}
-.viewerBadge_container__1QSob{
-    visibility: hidden;
-}
-#MainMenu{
-	visibility: hidden;
-}
-<style>
-"""
-st.markdown(hide, unsafe_allow_html=True)
 
 html(button, height=70, width=220)
 st.markdown(
@@ -125,26 +78,62 @@ st.markdown(
     unsafe_allow_html=True,
 )
 if input_text:
-    prompt = "You are a Q&A service where people come to you for advice, product recommendations, service recommendations, and to just vent about their aging parents. Provide links to resources when necessary, but make sure to sound empathetic. The prompt must actually make sense and be longer than 4 words, if it does not let the user know there was an issue with their request. This persons prompt is the following: "+str(input_text)
-    if prompt:
-        openai.api_key =  st.secrets["OPEN_AI_KEY"]
-        response = openai.Completion.create(engine="text-davinci-002", prompt=prompt, max_tokens=150)
+     # build out prompt
+    prompt_start = (
+        "You are a Q&A service where people come to you for advice, product recommendations, service recommendations, and to just vent about their aging parents. Provide links to resources when necessary, but make sure to sound human and empathetic. Answer the question based on the context below.\n\n" +
+        "Context:\n"
+    )
+    if prompt_start:
+        # openai.api_key =  st.secrets["OPEN_AI_KEY"]
+        openai.api_key =  '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'
+        MODEL = 'text-embedding-ada-002'
+        res = openai.Embedding.create(engine=MODEL, input=["My mother is getting dementia what should I do?"])
+
+        # returned query vectort from Pinecon
+        query_vector = res['data'][0]['embedding']
+        res = index.query(query_vector, top_k=3, include_metadata=True)
+
+        context = [
+            x['metadata']['Top Comments'] for x in res['matches']
+        ]
+
+        limit = 5000
+
+        prompt_end = (
+            f"\n\nQuestion: {input_text}\nAnswer:"
+        )
+
+        for i in range(1, len(context)):
+            if len("\n\n---\n\n".join(context[:i])) >= limit:
+                input_text = (
+                    prompt_start +
+                    "\n\n---\n\n".join(context[:i-1]) +
+                    prompt_end
+                )
+            elif i == len(context)-1:
+                input_text = (
+                    prompt_start +
+                    "\n\n---\n\n".join(context) +
+                    prompt_end
+                )
+
+
+        response = openai.Completion.create(
+            engine="text-davinci-003", 
+            prompt=input_text, 
+            temperature=0.1,
+            max_tokens=500,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0,
+            stop=None
+        )
         brainstorming_output = response['choices'][0]['text']
-        today = datetime.today().strftime('%Y-%m-%d')
-        topic = "Brainstorming ideas for: "+input_text+"\n@Date: "+str(today)+"\n"+brainstorming_output
         
         st.info(brainstorming_output)
        
-        st.write("[Try Premium](https://2lemvxpy32s.typeform.com/to/PSNhqoo1)")
+        st.write("[Need more help?](https://2lemvxpy32s.typeform.com/to/PSNhqoo1)")
 
-        fields = [input_text, brainstorming_output, str(today)]
-        # read local csv file
-        r = pd.read_csv('./data/prompts.csv')
-        if len(fields)!=0:
-            with open('./data/prompts.csv', 'a', encoding='utf-8', newline='') as f:
-                # write to csv file (append mode)
-                writer = csv.writer(f, delimiter=',', lineterminator='\n')
-                writer.writerow(fields)
 
         
         
