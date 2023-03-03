@@ -8,9 +8,10 @@ import pinecone
 
 st.set_page_config(page_title="Rocking Chair")
 
-PINECONE_AI_KEY =  st.secrets["PINECONE_AI_KEY"]
+PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
+EAST_ENV = st.secrets["EAST_ENV"]
 
-pinecone.init(api_key=PINECONE_AI_KEY, environment='us-east1-gcp')
+pinecone.init(api_key=PINECONE_API_KEY, environment=EAST_ENV)
 index = pinecone.Index('agingparents') 
 
 
