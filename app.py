@@ -89,7 +89,7 @@ if input_text:
     if prompt_start:
         openai.api_key =  st.secrets["OPEN_AI_KEY"]
         MODEL = 'text-embedding-ada-002'
-        res = openai.Embedding.create(engine=MODEL, input=["My mother is getting dementia what should I do?"])
+        res = openai.Embedding.create(engine=MODEL, input=[input_text])
 
         # returned query vectort from Pinecon
         query_vector = res['data'][0]['embedding']
