@@ -46,7 +46,7 @@ with st.sidebar:
     """)
     st.markdown(html_temp.format("rgba(55, 53, 47, 0.16)"),unsafe_allow_html=True)
     st.markdown("""
-    Made with ❤️ by [Lusenii Kromah](linkedin.com/in/luseniikromah/)
+    Made with ❤️  by [Lusenii Kromah](linkedin.com/in/luseniikromah/)
     """,
     unsafe_allow_html=True,
     )
@@ -84,8 +84,7 @@ if input_text:
         "Context:\n"
     )
     if prompt_start:
-        # openai.api_key =  st.secrets["OPEN_AI_KEY"]
-        openai.api_key =  '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'
+        openai.api_key =  st.secrets["OPEN_AI_KEY"]
         MODEL = 'text-embedding-ada-002'
         res = openai.Embedding.create(engine=MODEL, input=["My mother is getting dementia what should I do?"])
 
