@@ -21,11 +21,6 @@ html_temp = """
                 </div>
                 """
 
-button = """
-<script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="thehunter" data-color="#FFDD00" data-emoji=""  data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff" ></script>
-"""
-
-
 with st.sidebar:
     st.markdown("""
     # About 
@@ -56,18 +51,13 @@ with st.sidebar:
 
 
 input_text = None
-if 'output' not in st.session_state:
-    st.session_state['output'] = 0
 
-if st.session_state['output'] <=2:
-    st.markdown("""
-    # Rocking Chair
-    """)
-    input_text = st.text_input("Community driven support for aging parent care needs - where compassion meets expertise. ", disabled=False, placeholder="What's on your mind? (Health, Finance, Wills, Venting, etc..)")
-    st.session_state['output'] = st.session_state['output'] + 1
+st.markdown("""
+# Rocking Chair
+""")
+input_text = st.text_area("Community driven support for aging parent care needs - where compassion meets expertise. ", disabled=False, placeholder="What's on your mind? (Health, Finance, Wills, Venting, etc..)")
 
 
-html(button, height=70, width=220)
 st.markdown(
     """
     <style>
